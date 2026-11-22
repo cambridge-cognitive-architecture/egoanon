@@ -221,3 +221,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Never commit footage, plans or weights
+*.mp4
+*.mov
+*.avi
+*.bag
+*.jpg
+*.jpeg
+*.png
+!docs/demo.png
+*.pt
+*.tflite
+*.csv
+*.parquet
+*_plan.json
+*_manifest.json
+out/
