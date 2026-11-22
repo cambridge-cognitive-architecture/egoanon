@@ -7,7 +7,8 @@ from pathlib import Path
 
 DEFAULT_PAD_FRAMES = 3
 # How far each kind of box is grown before it is covered, as a fraction of it.
-MARGIN = {"face": 0.28, "person": 0.28, "tag": 0.28, "manual": 0.28, "screen": 0.42}
+MARGIN = {"face": 0.28, "person": 0.28, "tag": 0.28, "manual": 0.28, "screen": 0.42,
+          "body": 0.0}
 
 
 @dataclass
@@ -17,7 +18,7 @@ class Region:
     y: float
     w: float
     h: float
-    source: str = "face"  # face | person | tag | screen | manual
+    source: str = "face"  # face | person | tag | screen | manual | body
     score: float = 1.0
     track_id: int = -1
 

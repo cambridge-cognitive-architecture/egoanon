@@ -231,8 +231,10 @@ __marimo__/
 *.jpeg
 *.png
 !docs/demo.png
+!docs/demo_*.png
 *.pt
 *.tflite
+*.safetensors
 *.csv
 *.parquet
 *_plan.json

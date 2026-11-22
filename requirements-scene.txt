@@ -1,0 +1,7 @@
+# Optional: the inpaint and depth levels. Install after requirements.txt, then run
+#   pip install --no-deps simple-lama-inpainting==0.1.2
+# (--no-deps because that package pins Pillow<10, which has no Python 3.12 wheel).
+torch>=2.2
+torchvision>=0.17
+transformers>=4.56,<5
+pillow>=10.3

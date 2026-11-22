@@ -1,4 +1,4 @@
-"""Render levels, from most to least scene detail kept."""
+"""Render levels that need no model, and the entry point for those that do."""
 from __future__ import annotations
 
 import cv2
@@ -23,7 +23,7 @@ def _shape(region: Region, width: int, height: int, filled=True):
 
     def draw(canvas, value):
         thickness = -1 if filled else 2
-        if region.source in ("screen", "manual"):  # corners matter: use rectangles
+        if region.source in ("screen", "manual", "body"):  # corners matter: use rectangles
             cv2.rectangle(canvas, (x0, y0), (x1, y1), value, thickness)
         else:
             cv2.ellipse(canvas, centre, axes, 0, 0, 360, value, thickness)
@@ -50,9 +50,16 @@ def feather_outward(mask: np.ndarray) -> np.ndarray:
     return np.maximum(mask, cv2.GaussianBlur(mask, (FEATHER, FEATHER), 0))[..., None]
 
 
-def apply_level(image: np.ndarray, regions: list[Region], level: str = "blur") -> np.ndarray:
+def apply_level(image: np.ndarray, regions: list[Region], level: str = "blur",
+                models=None) -> np.ndarray:
+    from .scene import MODEL_LEVELS, render_scene
+
+    if level in MODEL_LEVELS:
+        return render_scene(image, regions, level, models)
     if level not in LEVELS:
-        raise ValueError(f"unknown level {level!r}; choose from {LEVELS}")
+        raise ValueError(f"unknown level {level!r}; choose from {LEVELS + MODEL_LEVELS}")
+    # Whole-body regions are only for the levels that remove people.
+    regions = [r for r in regions if r.source != "body"]
     height, width = image.shape[:2]
     if level in ("silhouette", "boxes"):
         # No source pixel survives these two levels.

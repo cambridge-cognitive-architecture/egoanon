@@ -1,0 +1,4 @@
+# Optional: the record level, on Apple silicon. Use a separate environment:
+# mlx-vlm needs a newer OpenCV and transformers than the rest of egoanon.
+mlx-vlm==0.8.0
+scipy>=1.11

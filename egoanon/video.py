@@ -10,6 +10,7 @@ import cv2
 
 from .plan import BlurPlan, Region
 from .render import LEVELS, apply_level
+from .scene import MODEL_LEVELS
 from .tracking import IouTracker, interpolate_dropouts
 
 SCHEMA = "egoanon/1"
@@ -58,17 +59,27 @@ def scan_video(video: str | Path, detector: Callable[..., list[Region]],
                     dict(stride=stride, max_gap=max_gap, **getattr(detector, "params", {})))
 
 
-def render_video(video: str | Path, plan: BlurPlan, output: str | Path,
-                 level: str = "blur") -> dict:
-    video, output = Path(video), Path(output)
-    if level not in LEVELS:
-        raise ValueError(f"unknown level {level!r}")
+def check_source(video: Path, plan: BlurPlan, output: Path) -> None:
     if not plan.is_whole_video:
         raise ValueError("the plan does not cover the whole video")
     if sha256(video) != plan.source_sha256:
         raise ValueError("the plan was made for a different video")
     if output.exists():
         raise FileExistsError(f"{output} already exists")
+
+
+def render_video(video: str | Path, plan: BlurPlan, output: str | Path,
+                 level: str = "blur", models=None) -> dict:
+    video, output = Path(video), Path(output)
+    if level not in LEVELS + MODEL_LEVELS:
+        raise ValueError(f"unknown level {level!r}")
+    if level in MODEL_LEVELS:
+        if plan.params.get("bodies") is not True:
+            raise ValueError(f"level {level!r} needs whole-body regions: scan again with --bodies")
+        if models is None:
+            raise ValueError(f"level {level!r} needs models")
+        models.require(level)
+    check_source(video, plan, output)
     partial = output.with_name(f"{output.stem}.partial{output.suffix}")
     cap = cv2.VideoCapture(str(video))
     writer = cv2.VideoWriter(str(partial), cv2.VideoWriter_fourcc(*"mp4v"),
@@ -82,8 +93,8 @@ def render_video(video: str | Path, plan: BlurPlan, output: str | Path,
             if not ok:
                 break
             regions = plan.regions_at(i)
-            writer.write(apply_level(image, regions, level))
-            covered += bool(regions)
+            writer.write(apply_level(image, regions, level, models))
+            covered += any(level in MODEL_LEVELS or r.source != "body" for r in regions)
             i += 1
     finally:
         cap.release()
@@ -96,12 +107,15 @@ def render_video(video: str | Path, plan: BlurPlan, output: str | Path,
                     output_sha256=sha256(output), n_frames=i, n_frames_covered=covered,
                     params=plan.params,
                     caveat="Automatic detection misses things. A person must review the output.")
+    if level in MODEL_LEVELS:
+        manifest["models"] = models.params
     manifest_path(output).write_text(json.dumps(manifest, indent=1), encoding="utf-8")
     return manifest
 
 
 def manifest_path(video: Path) -> Path:
-    return video.with_name(f"{video.stem}_manifest.json")
+    kind = "_record" if video.suffix == ".json" else ""  # out.mp4 and out.json can coexist
+    return video.with_name(f"{video.stem}{kind}_manifest.json")
 
 
 def is_anonymised(video: str | Path) -> bool:
