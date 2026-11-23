@@ -2,6 +2,8 @@
 
 Local anonymisation of head-mounted (egocentric) video.
 
+Author: Salome Egli
+
 - **Detection:** faces, the head and badge band of every detected person, and screens.
 - **Tracking:** links detections and fills short dropouts. It only ever adds cover.
 - **Render levels:** eight, from blur to a text-only record (table below).
@@ -113,6 +115,22 @@ While the three model levels run, Hugging Face and Ultralytics are set offline a
 - **Record:** output can include objects that are not present (hallucination) and must be checked. Listed words can still reveal something about a place, and a name spelled like an object word would pass. A line says nothing about the frames between the sampled ones.
 
 Audio is dropped. The plan holds box positions and should be kept with the raw video.
+
+## Part of the toolkit
+
+Five tools for field studies with wearable sensors:
+
+[field-logger](https://github.com/cambridge-cognitive-architecture/field-logger) → [wearable-pipeline](https://github.com/cambridge-cognitive-architecture/wearable-pipeline) → [spatial-twin](https://github.com/cambridge-cognitive-architecture/spatial-twin) → field-workbench (in preparation) → **egoanon**
+
+<!-- Overview diagram goes here: docs/toolkit.png -->
+
+| Tool | What it does |
+|---|---|
+| [field-logger](https://github.com/cambridge-cognitive-architecture/field-logger) | tablet app: location by threshold crossings, tasks, interruptions and ratings, on one clock |
+| [wearable-pipeline](https://github.com/cambridge-cognitive-architecture/wearable-pipeline) | eye tracking, ECG and the field log on one clock; pupil and HRV preprocessing; quality control |
+| [spatial-twin](https://github.com/cambridge-cognitive-architecture/spatial-twin) | LiDAR scans against the floor plan: registration, isovists, walkable space, objects |
+| field-workbench (in preparation) | one local app from project set-up through coding and compute to the master table |
+| **egoanon** (this repository) | anonymisation of the head-mounted scene video |
 
 ## Licence and credit
 
