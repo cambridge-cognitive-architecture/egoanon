@@ -120,7 +120,7 @@ Audio is dropped. The plan holds box positions and should be kept with the raw v
 
 Five tools for field studies with wearable sensors:
 
-[field-logger](https://github.com/cambridge-cognitive-architecture/field-logger) → [wearable-pipeline](https://github.com/cambridge-cognitive-architecture/wearable-pipeline) → [spatial-twin](https://github.com/cambridge-cognitive-architecture/spatial-twin) → field-workbench (in preparation) → **egoanon**
+[field-logger](https://github.com/cambridge-cognitive-architecture/field-logger) → [wearable-pipeline](https://github.com/cambridge-cognitive-architecture/wearable-pipeline) → [spatial-twin](https://github.com/cambridge-cognitive-architecture/spatial-twin) → [field-workbench](https://github.com/cambridge-cognitive-architecture/field-workbench) → **egoanon**
 
 <!-- Overview diagram goes here: docs/toolkit.png -->
 
@@ -129,7 +129,7 @@ Five tools for field studies with wearable sensors:
 | [field-logger](https://github.com/cambridge-cognitive-architecture/field-logger) | tablet app: location by threshold crossings, tasks, interruptions and ratings, on one clock |
 | [wearable-pipeline](https://github.com/cambridge-cognitive-architecture/wearable-pipeline) | eye tracking, ECG and the field log on one clock; pupil and HRV preprocessing; quality control |
 | [spatial-twin](https://github.com/cambridge-cognitive-architecture/spatial-twin) | LiDAR scans against the floor plan: registration, isovists, walkable space, objects |
-| field-workbench (in preparation) | one local app from project set-up through coding and compute to the master table |
+| [field-workbench](https://github.com/cambridge-cognitive-architecture/field-workbench) | one local app for each session: export, ingest, backup, QC, sync, crossing coding, preprocessing to a master table |
 | **egoanon** (this repository) | anonymisation of the head-mounted scene video |
 
 ## Licence and credit
